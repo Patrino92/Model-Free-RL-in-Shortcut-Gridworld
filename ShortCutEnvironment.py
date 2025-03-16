@@ -144,7 +144,6 @@ class ShortcutEnvironment(Environment):
                 return -100
         return -1
     
-    
     def render(self):
         s = self.s.copy()
         s[self.y, self.x] = 'p'
