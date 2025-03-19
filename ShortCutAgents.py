@@ -58,7 +58,7 @@ class SARSAAgent(object):
         # Return a vector with the the cumulative reward (=return) per episode\
         episode_returns = []
 
-        for episode in range(n_episodes):
+        for _ in range(n_episodes):
             env.reset()
             state = env.state()
             action = self.select_action(state)
@@ -115,21 +115,61 @@ class nStepSARSAAgent(object):
         self.alpha = alpha
         self.gamma = gamma
         # TO DO: Initialize variables if necessary
+        self.Q = np.zeros((n_states, n_actions))
         
     def select_action(self, state):
         # TO DO: Implement policy
-        action = None
+        p = np.random.rand()
+        if p < self.epsilon:
+          action = np.random.randint(self.n_actions)
+        else:
+          action = np.argmax(self.Q[state, :])
         return action
         
     def update(self, states, actions, rewards, done): # Augment arguments if necessary
         # TO DO: Implement n-step SARSA update
-        pass
+        G = 0
+        for i in range(len(rewards)):
+            G += self.gamma ** i * rewards[i]
+        if not done:
+            G += self.gamma ** len(rewards) * self.Q[states[-1], actions[-1]]
+        self.Q[states[0], actions[0]] += self.alpha * (G - self.Q[states[0], actions[0]])
     
-    def train(self, n_episodes):
+    def train(self, env, n_episodes):
         # TO DO: Implement the agent loop that trains for n_episodes. 
         # Return a vector with the the cumulative reward (=return) per episode
         episode_returns = []
-        return episode_returns  
-    
-    
-    
+
+        for _ in range(n_episodes):
+            env.reset()
+            state = env.state()
+            action = self.select_action(state)
+            episode_return = 0
+
+            states, actions, rewards = [], [], []
+            while not env.done(): 
+                reward = env.step(action)
+                states.append(state)
+                actions.append(action)
+                rewards.append(reward)
+                
+                state = env.state()
+                action = self.select_action(state)
+                episode_return += reward 
+
+                # Update state-action pairs that have n steps before episode ends
+                if len(actions) > self.n:
+                    self.update(states, actions, rewards, env.done())
+                    states.pop(0)
+                    actions.pop(0)
+                    rewards.pop(0)
+            
+            # Update state-action pairs that do not have n steps before episode ends
+            while len(actions) > 0:
+                self.update(states, actions, rewards, env.done())
+                states.pop(0)
+                actions.pop(0)
+                rewards.pop(0)
+            
+            episode_returns.append(episode_return)
+        return episode_returns
