@@ -15,7 +15,7 @@ def run_repetition(agent_type, n_rep, n_episodes, epsilon=0.1, alpha=0.1, gamma=
         elif agent_type == 'sarsa':
             agent = SARSAAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=epsilon, alpha=alpha, gamma=gamma)
         
-        episode_returns = agent.train(n_episodes)
+        episode_returns = agent.train(env, n_episodes)
         total_returns.append(episode_returns)
 
     return np.mean(total_returns, axis=0)
@@ -23,8 +23,8 @@ def run_repetition(agent_type, n_rep, n_episodes, epsilon=0.1, alpha=0.1, gamma=
 if __name__ == "__main__":
     # Q-learning
     
-    # SARSA
-    # mean_returns = run_repetition('sarsa', 1, 10000)
+    #SARSA
+    #mean_returns = run_repetition('sarsa', 1, 10000)
     # mean_returns = run_repetition('sarsa', 100, 1000)
     # plt.plot(mean_returns)
     # plt.xlabel("Episodes")

@@ -1,5 +1,4 @@
 import numpy as np #IT WAS NOT INCLUDED
-from ShortCutEnvironment import ShortcutEnvironment, WindyShortcutEnvironment #IT WAS NOT INCLUDED
 
 class QLearningAgent(object):
 
@@ -47,19 +46,16 @@ class SARSAAgent(object):
           action = np.argmax(self.Q[state, :])
         return action
         
-    def update(self, state, action, reward, done): # Augment arguments if necessary
+    def update(self, state, action, next_state, next_action, reward, done): # Augment arguments if necessary
         # TO DO: Implement SARSA update
         if done:
             self.Q[state, action] += self.alpha * (reward - self.Q[state, action])
-        else: 
-            next_action = self.select_action(state)
-            self.Q[state, action] += self.alpha * (reward + self.gamma * self.Q[state, next_action] - self.Q[state, action])
+        else:
+            self.Q[state, action] += self.alpha * (reward + self.gamma * self.Q[next_state, next_action] - self.Q[state, action])
 
-    def train(self, n_episodes):
+    def train(self, env, n_episodes):
         # TO DO: Implement the agent loop that trains for n_episodes. 
         # Return a vector with the the cumulative reward (=return) per episode\
-        
-        env = ShortcutEnvironment()
         episode_returns = []
 
         for episode in range(n_episodes):
@@ -70,9 +66,12 @@ class SARSAAgent(object):
 
             while not env.done():
                 reward = env.step(action)
-                self.update(state, action, reward, env.done())
-                state = env.state()
-                action = self.select_action(state)
+                next_state = env.state()
+                next_action = self.select_action(next_state)
+                self.update(state, action, next_state, next_action, reward, env.done())
+
+                state = next_state
+                action = next_action
                 episode_return += reward
 
             episode_returns.append(episode_return)
@@ -80,6 +79,7 @@ class SARSAAgent(object):
 
 
 class ExpectedSARSAAgent(object):
+
 
     def __init__(self, n_actions, n_states, epsilon=0.1, alpha=0.1, gamma=1.0):
         self.n_actions = n_actions
