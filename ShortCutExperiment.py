@@ -29,8 +29,13 @@ def run_repetition(agent_type, n_rep, n_episodes, n=0, epsilon=0.1, alpha=0.5, g
 
 if __name__ == "__main__":
     ''' Q-learning '''
-    # ...
-
+    # mean_returns = run_repetition("qlearning",1,10000)
+    mean_returns = run_repetition("qlearning", 100, 1000)
+    plt.plot(mean_returns)
+    plt.xlabel("Episodes")
+    plt.ylabel("Reward")
+    plt.title("Q-Learning")
+    plt.show()
     ''' SARSA '''
     # mean_returns = run_repetition('sarsa', 1, 10000)
     # mean_returns = run_repetition('sarsa', 100, 1000)

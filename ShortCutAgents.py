@@ -9,22 +9,41 @@ class QLearningAgent(object):
         self.alpha = alpha
         self.gamma = gamma
         # TO DO: Initialize variables if necessary
+        self.Q = np.zeros((n_states, n_actions))
         
     def select_action(self, state):
         # TO DO: Implement policy
-        action = None
+        p = np.random.rand()
+        if p < self.epsilon:
+            action = np.random.randint(self.n_actions)
+        else:
+            action = np.argmax(self.Q[state, :])
         return action
         
-    def update(self, state, action, reward, done): # Augment arguments if necessary
+    def update(self, state, action, reward, done, next_state): # Augment arguments if necessary
         # TO DO: Implement Q-learning update
-        pass
-    
-    def train(self, n_episodes):
-        # TO DO: Implement the agent loop that trains for n_episodes. 
-        # Return a vector with the the cumulative reward (=return) per episode
-        episode_returns = []
-        return episode_returns
+        if done:
+            self.Q[state, action] = self.Q[state, action] + self.alpha * (reward - self.Q[state, action])
+        else:
+            self.Q[state, action] = self.Q[state, action] + self.alpha * (reward + self.gamma * np.max(self.Q[next_state]) - self.Q[state, action])
 
+    
+    def train(self, env, n_episodes):
+        # TO DO: Implement the agent loop that trains for n_episodes. 
+        # Return a vector with the cumulative reward (=return) per episode
+        episode_returns = []
+        for _ in range(n_episodes):
+            env.reset()
+            state = env.state()
+            episode_reward = 0
+            while not env.done():
+                action = self.select_action(state)
+                reward = env.step(action)
+                episode_reward += reward
+                self.update(state, action, reward, env.done(), env.state())
+                state = env.state()
+            episode_returns.append(episode_reward)
+        return episode_returns
 
 class SARSAAgent(object):
 
