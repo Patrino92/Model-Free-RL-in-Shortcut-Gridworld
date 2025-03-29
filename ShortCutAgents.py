@@ -99,7 +99,6 @@ class SARSAAgent(object):
 
 class ExpectedSARSAAgent(object):
 
-
     def __init__(self, n_actions, n_states, epsilon=0.1, alpha=0.1, gamma=1.0):
         self.n_actions = n_actions
         self.n_states = n_states
@@ -107,21 +106,45 @@ class ExpectedSARSAAgent(object):
         self.alpha = alpha
         self.gamma = gamma
         # TO DO: Initialize variables if necessary
+        self.Q = np.zeros((n_states, n_actions))
         
     def select_action(self, state):
         # TO DO: Implement policy
-        action = None
+        p = np.random.rand()
+        if p < self.epsilon:
+            action = np.random.randint(self.n_actions)
+        else:
+            action = np.argmax(self.Q[state, :])
         return action
         
-    def update(self, state, action, reward, done): # Augment arguments if necessary
+    def update(self, state, action, reward, done, next_state): # Augment arguments if necessary
         # TO DO: Implement Expected SARSA update
-        pass
+        if done:
+            self.Q[state, action] += self.alpha * (reward - self.Q[state, action])
+        else:
+            policy = np.ones(self.n_actions) * (self.epsilon / self.n_actions) # We use epsilon-greedy for choosing the policy
+            best_action = np.argmax(self.Q[next_state])
+            policy[best_action] += (1 - self.epsilon) # We add because it does not sum to 1 otherwise
+            expected_q_value = np.sum(policy * self.Q[next_state])
 
-    def train(self, n_episodes):
+            self.Q[state, action] += self.alpha * (reward + self.gamma * expected_q_value - self.Q[state, action])
+
+    def train(self, env, n_episodes):
         # TO DO: Implement the agent loop that trains for n_episodes. 
         # Return a vector with the the cumulative reward (=return) per episode
         episode_returns = []
-        return episode_returns    
+        for _ in range(n_episodes):
+            env.reset()
+            state = env.state()
+            episode_reward = 0
+            while not env.done():
+                action = self.select_action(state)
+                reward = env.step(action)
+                episode_reward += reward
+                self.update(state, action, reward, env.done(), env.state())
+                state = env.state()
+            episode_returns.append(episode_reward)
+        return episode_returns
 
 
 class nStepSARSAAgent(object):

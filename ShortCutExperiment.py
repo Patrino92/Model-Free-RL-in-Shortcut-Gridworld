@@ -29,13 +29,23 @@ def run_repetition(agent_type, n_rep, n_episodes, n=0, epsilon=0.1, alpha=0.5, g
 
 if __name__ == "__main__":
     ''' Q-learning '''
-    # mean_returns = run_repetition("qlearning",1,10000)
-    mean_returns = run_repetition("qlearning", 100, 1000)
+    mean_returns = run_repetition("qlearning",1,10000)
+    # mean_returns = run_repetition("qlearning", 100, 1000)
     plt.plot(mean_returns)
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.title("Q-Learning")
     plt.show()
+
+    # alpha = [0.01, 0.1, 0.5, 0.9]
+    # for a in alpha:
+    #     mean_returns = run_repetition('qlearning', 100, 1000, alpha=a)
+    #     plt.plot(mean_returns, label=f"alpha={a}")
+    # plt.xlabel("Episodes")
+    # plt.ylabel("Reward")
+    # plt.title("Q-learning with different alpha values")
+    # plt.legend()
+    # plt.show()
     ''' SARSA '''
     # mean_returns = run_repetition('sarsa', 1, 10000)
     # mean_returns = run_repetition('sarsa', 100, 1000)
@@ -56,14 +66,30 @@ if __name__ == "__main__":
     # plt.show()
 
     ''' Stormy Weather '''
-    env = WindyShortcutEnvironment()
-    # agent = QLearningAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=0.1, alpha=0.1)
-    agent = SARSAAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=0.1, alpha=0.1)
-    agent.train(env, 10000)
-    env.render_greedy(agent.Q) # Does not show the path nicely
+    # env = WindyShortcutEnvironment()
+    # # agent = QLearningAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=0.1, alpha=0.1)
+    # agent = SARSAAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=0.1, alpha=0.1)
+    # agent.train(env, 10000)
+    # env.render_greedy(agent.Q) # Does not show the path nicely
 
     ''' Expected SARSA '''
-    # ...
+    # mean_returns = run_repetition("expectedsarsa",1,10000)
+    # mean_returns = run_repetition("expectedsarsa", 100, 1000)
+    # plt.plot(mean_returns)
+    # plt.xlabel("Episodes")
+    # plt.ylabel("Reward")
+    # plt.title("Expected SARSA")
+    # plt.show()
+
+    # alpha = [0.01, 0.1, 0.5, 0.9]
+    # for a in alpha:
+    #     mean_returns = run_repetition('expectedsarsa', 100, 1000, alpha=a)
+    #     plt.plot(mean_returns, label=f"alpha={a}")
+    # plt.xlabel("Episodes")
+    # plt.ylabel("Reward")
+    # plt.title("Expected SARSA with different alpha values")
+    # plt.legend()
+    # plt.show()
 
     ''' n-step SARSA '''
     # mean_returns = run_repetition('nstepsarsa', 1, 10000, n=2)
