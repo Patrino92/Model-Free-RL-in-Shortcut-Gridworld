@@ -3,8 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from ShortCutEnvironment import ShortcutEnvironment, WindyShortcutEnvironment
 from ShortCutAgents import QLearningAgent, SARSAAgent, ExpectedSARSAAgent, nStepSARSAAgent
-import sys
-sys.stdout.reconfigure(encoding='utf-8')
 
 
 def run_repetition(agent_type, n_rep, n_episodes, n=0, epsilon=0.1, alpha=0.5, gamma=1.0):
@@ -36,6 +34,12 @@ if __name__ == "__main__":
     plt.title("Q-Learning with 10000 episodes")
     plt.savefig("Q-learning_10000.png")
     plt.close()
+
+    '''Q-learning paths'''
+    env = ShortcutEnvironment()
+    agent = QLearningAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=0.1, alpha=0.5, gamma=1.0)
+    agent.train(env, 10000)
+    env.render_greedy(agent.Q)
     
     mean_returns = run_repetition("qlearning", 100, 1000)
     plt.plot(mean_returns)
@@ -72,7 +76,13 @@ if __name__ == "__main__":
     plt.title("SARSA with 100 repetitions and 1000 episodes")
     plt.savefig("SARSA_100x1000.png")
     plt.close()
-    
+
+    '''SARSA paths'''
+    env = ShortcutEnvironment()
+    agent = SARSAAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=0.1, alpha=0.5, gamma=1.0)
+    agent.train(env, 10000)
+    env.render_greedy(agent.Q)
+
     alpha = [0.01, 0.1, 0.5, 0.9]
     for a in alpha:
         mean_returns = run_repetition('sarsa', 100, 1000, alpha=a)
@@ -103,7 +113,7 @@ if __name__ == "__main__":
     plt.title("Expected SARSA with 10000 episodes")
     plt.savefig("Expected_SARSA_10000.png")
     plt.close()
-    
+
     mean_returns = run_repetition("expectedsarsa", 100, 1000)
     plt.plot(mean_returns)
     plt.xlabel("Episodes")
