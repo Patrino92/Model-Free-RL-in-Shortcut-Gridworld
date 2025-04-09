@@ -1,8 +1,8 @@
-import numpy as np #IT WAS NOT INCLUDED
+import numpy as np
 
 class QLearningAgent(object):
 
-    def __init__(self, n_actions, n_states, epsilon=0.1, alpha=0.1, gamma=1.0):
+    def __init__(self, n_actions, n_states, epsilon, alpha, gamma):
         self.n_actions = n_actions
         self.n_states = n_states
         self.epsilon = epsilon
@@ -47,7 +47,7 @@ class QLearningAgent(object):
 
 class SARSAAgent(object):
 
-    def __init__(self, n_actions, n_states, epsilon=0.1, alpha=0.1, gamma=1.0):
+    def __init__(self, n_actions, n_states, epsilon, alpha, gamma):
         self.n_actions = n_actions
         self.n_states = n_states
         self.epsilon = epsilon
@@ -82,24 +82,20 @@ class SARSAAgent(object):
             state = env.state()
             action = self.select_action(state)
             episode_return = 0
-
             while not env.done():
                 reward = env.step(action)
                 next_state = env.state()
                 next_action = self.select_action(next_state)
                 self.update(state, action, next_state, next_action, reward, env.done())
-
                 state = next_state
                 action = next_action
                 episode_return += reward
-
             episode_returns.append(episode_return)
         return episode_returns
 
-
 class ExpectedSARSAAgent(object):
 
-    def __init__(self, n_actions, n_states, epsilon=0.1, alpha=0.1, gamma=1.0):
+    def __init__(self, n_actions, n_states, epsilon, alpha, gamma):
         self.n_actions = n_actions
         self.n_states = n_states
         self.epsilon = epsilon
@@ -146,10 +142,9 @@ class ExpectedSARSAAgent(object):
             episode_returns.append(episode_reward)
         return episode_returns
 
-
 class nStepSARSAAgent(object):
 
-    def __init__(self, n_actions, n_states, n, epsilon=0.1, alpha=0.1, gamma=1.0):
+    def __init__(self, n_actions, n_states, n, epsilon, alpha, gamma):
         self.n_actions = n_actions
         self.n_states = n_states
         self.n = n
@@ -181,37 +176,31 @@ class nStepSARSAAgent(object):
         # TO DO: Implement the agent loop that trains for n_episodes. 
         # Return a vector with the the cumulative reward (=return) per episode
         episode_returns = []
-
         for _ in range(n_episodes):
             env.reset()
             state = env.state()
             action = self.select_action(state)
             episode_return = 0
-
             states, actions, rewards = [], [], []
             while not env.done(): 
                 reward = env.step(action)
                 states.append(state)
                 actions.append(action)
                 rewards.append(reward)
-                
                 state = env.state()
                 action = self.select_action(state)
                 episode_return += reward 
-
                 # Update state-action pairs that have n steps before episode ends
                 if len(actions) > self.n:
                     self.update(states, actions, rewards, env.done())
                     states.pop(0)
                     actions.pop(0)
                     rewards.pop(0)
-            
             # Update state-action pairs that do not have n steps before episode ends
             while len(actions) > 0:
                 self.update(states, actions, rewards, env.done())
                 states.pop(0)
                 actions.pop(0)
                 rewards.pop(0)
-            
             episode_returns.append(episode_return)
         return episode_returns
