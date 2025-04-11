@@ -26,6 +26,7 @@ if __name__ == "__main__":
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.title("Q-Learning with 10000 episodes")
+    plt.ylim(-2000, 100)
     plt.savefig("Q-learning_10000.png")
     plt.close()
 
@@ -34,6 +35,7 @@ if __name__ == "__main__":
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.title("Q-Learning with 100 repetitions and 1000 episodes")
+    plt.ylim(-2000, 100)
     plt.savefig("Q-learning_100x1000.png")
     plt.close()
 
@@ -45,10 +47,10 @@ if __name__ == "__main__":
     plt.ylabel("Reward")
     plt.title("Q-learning with different alpha values")
     plt.legend()
+    plt.ylim(-2000, 100)
     plt.savefig("Q-learning_alpha_values.png")
     plt.close()
 
-    # Q-learning greedy paths
     env = ShortcutEnvironment()
     agent = QLearningAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=0.1, alpha=0.5, gamma=1.0)
     agent.train(env, 10000)
@@ -60,6 +62,7 @@ if __name__ == "__main__":
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.title("SARSA with 10000 episodes")
+    plt.ylim(-2000, 100)
     plt.savefig("SARSA_10000.png")
     plt.close()
 
@@ -68,6 +71,7 @@ if __name__ == "__main__":
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.title("SARSA with 100 repetitions and 1000 episodes")
+    plt.ylim(-2000, 100)
     plt.savefig("SARSA_100x1000.png")
     plt.close()
 
@@ -79,10 +83,10 @@ if __name__ == "__main__":
     plt.ylabel("Reward")
     plt.title("SARSA with different alpha values")
     plt.legend()
+    plt.ylim(-2000, 100)
     plt.savefig("SARSA_alpha_values.png")
     plt.close()
 
-    # SARSA greedy paths
     env = ShortcutEnvironment()
     agent = SARSAAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=0.1, alpha=0.5, gamma=1.0)
     agent.train(env, 10000)
@@ -105,6 +109,7 @@ if __name__ == "__main__":
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.title("Expected SARSA with 10000 episodes")
+    plt.ylim(-2000, 100)
     plt.savefig("Expected_SARSA_10000.png")
     plt.close()
 
@@ -113,6 +118,7 @@ if __name__ == "__main__":
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.title("Expected SARSA with 100 repetitions and 1000 episodes")
+    plt.ylim(-2000, 100)
     plt.savefig("Expected_SARSA_100x1000.png")
     plt.close()
 
@@ -123,13 +129,13 @@ if __name__ == "__main__":
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.title("Expected SARSA with different alpha values")
+    plt.ylim(-2000, 100)
     plt.legend()
     plt.savefig("Expected_SARSA_alpha_values.png")
     plt.close()
 
-    # Expected SARSA greedy paths
     env = ShortcutEnvironment()
-    agent = ExpectedSARSAAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=0.1, alpha=0.5, gamma=1.0) # maybe change alpha after analyzing the results
+    agent = ExpectedSARSAAgent(n_actions=env.action_size(), n_states=env.state_size(), epsilon=0.1, alpha=0.9, gamma=1.0)
     agent.train(env, 10000)
     env.render_greedy(agent.Q)
 
@@ -139,25 +145,27 @@ if __name__ == "__main__":
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.title("n-step SARSA with 10000 episodes and n=2")
+    plt.ylim(-2000, 100)
     plt.savefig("n-step_SARSA_10000.png")
     plt.close()
 
     n_values = [1, 2, 5, 10, 25]
     for n in n_values:
-        mean_returns = run_repetition('sarsa', 100, 1000, n=n)
+        mean_returns = run_repetition('sarsa', 100, 1000, n=n, alpha=0.5)
         plt.plot(mean_returns, label=f"n={n}")
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.title("n-step SARSA with different n values")
     plt.legend()
+    plt.ylim(-1000, 100)
     plt.savefig("n-step_SARSA_n_values.png")
     plt.close()
 
     ''' Comparison '''
     qlearning_returns = run_repetition("qlearning", 100, 1000, alpha=0.5)
     sarsa_returns = run_repetition("sarsa", 100, 1000, alpha=0.5)
-    expectedsarsa_returns = run_repetition("expectedsarsa", 100, 1000, alpha=0.5) # maybe change alpha after analyzing the results
-    nstepsarsa_returns = run_repetition("nstepsarsa", 100, 1000, n=2) # maybe change n and alpha after analyzing the results
+    expectedsarsa_returns = run_repetition("expectedsarsa", 100, 1000, alpha=0.9)
+    nstepsarsa_returns = run_repetition("nstepsarsa", 100, 1000, n=2, alpha=0.5)
 
     plt.plot(qlearning_returns, label="Q-learning")
     plt.plot(sarsa_returns, label="SARSA")
@@ -167,5 +175,6 @@ if __name__ == "__main__":
     plt.ylabel("Reward")
     plt.title("Comparison of Q-learning, SARSA, Expected SARSA, and n-step SARSA")
     plt.legend()
+    plt.ylim(-1000, 100)
     plt.savefig("Comparison.png")
     plt.close()
