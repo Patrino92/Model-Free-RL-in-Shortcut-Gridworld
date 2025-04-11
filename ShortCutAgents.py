@@ -76,7 +76,6 @@ class SARSAAgent(object):
         # TO DO: Implement the agent loop that trains for n_episodes. 
         # Return a vector with the the cumulative reward (=return) per episode\
         episode_returns = []
-
         for _ in range(n_episodes):
             env.reset()
             state = env.state()
