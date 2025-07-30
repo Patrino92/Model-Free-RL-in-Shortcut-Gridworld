@@ -1,7 +1,6 @@
 # Model-Free RL in Shortcut Gridworld
 **Assignment Year: 2024-2025**
 
-## Summary
 This project explores four model-free reinforcement learning algorithms: **Q-Learning**, **SARSA**, **Expected SARSA**, and **n-step SARSA**. Each method is implemented and evaluated in a custom 12×12 grid-world called the **Shortcut Environment**, which introduces challenges such as cliffs and stochastic wind. We analyze learning curves, parameter sensitivity, and policy behaviors across methods.
 
 ## Overview
@@ -21,7 +20,6 @@ We implement and test the following RL agents:
 
 ## Features
 - Custom Shortcut and Windy environments.
-- Implementations of 4 model-free RL agents.
 - ε-greedy exploration and Q-table updates.
 - Batch experiment runner with plotting.
 - Visualizations of learned greedy policies.
