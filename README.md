@@ -27,7 +27,7 @@ We implement and test the following RL agents:
 
 ## Contributors
 - **Kacper Nizielski**
-- **Emmanouil Zagoriti**
+- **Emmanouil Zagoritis**
 
 ## References
 - Thomas Moerland, part of Introduction to Reinforcement Learning course, Leiden University
